@@ -5,67 +5,104 @@
 #  into the script
 
 def getResult(value):
-	if (not isinstance(value, int)) | (not isinstance(value, float)):
-		return None
+#	if (not isinstance(value, int)) | (not isinstance(value, float)):
+#		return None
 	return 2*value 
 
-class table:
-	def __init__(rows):
-		self.rows = rows
+class Table:
+	def __init__(self):
+		self.rows = 0
 		self.secondRow = []
 		self.firstRow = []
+		self.secondTitle = ""
+		self.firstTitle = ""
 		
 		self.start = "\\begin{tabular}"
 		self.end = "\\end{tabular}"
 		
-	def addValue(row, value):
-		if (row < 0 ) | (row > self.rows):
+	def addValue(self, row, value):
+		if (row == self.rows):
 			self.firstRow[row] = value
-		elif (row == self.rows):
+			return True
+		elif (row < 0 ) | (row > self.rows):
 			self.firstRow.append(value)
 			self.rows += 1
+			return True
+		else:
+			return False
 			
-	def fillTable():
+	def fillTable(self):
 		self.secondRow = []
 		for i in range(0, self.rows):
 			self.secondRow.append(getResult(self.firstRow[i]))
+		self.__exportTable("table.tex")
+			
+	def addTitle(self, first, second):
+		self.firstTitle = first
+		self.secondTitle = second
 		
-	def __exportTable(filepath):
-		f = open(filepath, 'r')
-		f.clear()
+	def __exportTable(self, filepath):
+		f = open(filepath, 'w')
+		f.write(self.start)
 		
-		f.write(start)
-		
-		formatString = "{"
+		formatString = "{|c "
 		for i in range(0, self.rows):
-			formatString.append("|c|")
-		formatString.append("}")
+			formatString += "|c"
+		formatString += "|}"
 		f.write(formatString)
 		del formatString
 		
-		firstString = ""
+		f.write("\hline ")
+		
+		firstString = self.firstTitle
+		firstString += "&"
 		for i in range(0, self.rows):
-			firstString.append(self.firstRow[i])
-			firstString.append("&")
-		firstString.append("\\\\")
+			firstString += str(self.firstRow[i])
+			firstString += "&"
+		firstString += "\\\\"
 		f.write(firstString)
 		del firstString
 		
-		secondString = ""
+		f.write("\hline ")
+		
+		secondString = self.secondTitle
+		secondString += "&"
 		for i in range(0, self.rows):
-			secondString.append(self.secondRow[i])
-			secondString.append("&")
-		secondString.append("\\\\")
+			secondString += str(self.secondRow[i])
+			secondString += "&"
+		secondString +="\\\\"
 		f.write(secondString)
 		del secondString
+		f.write("\hline")
 		
 		f.write(self.end)
-		
+		f.close()
 				
 
 def main():
 	
+	inputString = None
+	table = Table()
+	i = 0
 	
+	inputTitle1 = input("Namen Reihe 1 eingeben: ")
+	inputTitle2 = input("Namen Reihe 2 eingeben: ")
+	table.addTitle(inputTitle1, inputTitle2)
+	del inputTitle1, inputTitle2
+	
+	while(inputString != "end"):
+		inputString = input("Datensatz eingeben: ")
+		if inputString != "end":
+			i += 1
+			if not table.addValue(i, inputString):
+				print("Fehler, Invalide Zahl !")
+				return 1
+				
+	table.fillTable()
 	
 	return 0
 
+
+
+if __name__ == "__main__":
+	main()
