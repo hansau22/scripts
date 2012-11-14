@@ -81,12 +81,17 @@ class Table:
 
 def main():
 	
+	print("Simple script to generate a LaTeX table sequence")
+	
 	inputString = None
 	table = Table()
 	i = 0
 	
 	inputTitle1 = input("Namen Reihe 1 eingeben: ")
 	inputTitle2 = input("Namen Reihe 2 eingeben: ")
+	print("")
+	print("Daten eingeben, mit \"end\" beenden.")
+	print("")
 	table.addTitle(inputTitle1, inputTitle2)
 	del inputTitle1, inputTitle2
 	
@@ -97,9 +102,9 @@ def main():
 			if not table.addValue(i, inputString):
 				print("Fehler, Invalide Zahl !")
 				return 1
-				
-	table.fillTable()
 	
+	table.fillTable()
+	print("Die Tabelle wurde in table.text geschrieben.")
 	return 0
 
 
