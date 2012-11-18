@@ -7,7 +7,9 @@
 def getResult(value):
 #	if (not isinstance(value, int)) | (not isinstance(value, float)):
 #		return None
-	return 2*value 
+
+	result = (0.03 / value)
+	return result
 
 class Table:
 	def __init__(self):
